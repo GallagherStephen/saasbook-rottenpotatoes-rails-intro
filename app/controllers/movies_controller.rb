@@ -9,12 +9,17 @@ class MoviesController < ApplicationController
   def index
     
     
-    @sort = params[:sort]
+    @sort = params[:sort] || session[:sort]
+    
+    session[:ratings] = session[:ratings] || @all_ratings
     
     @all_ratings = Movie.all_ratings
     
-    @ratings = params[:ratings]
-     
+    @ratings = params[:ratings] || session[:ratings]
+    session[:sort] = @sort
+    session[:ratings] = @ratings
+    
+    
     if @ratings == nil
       @ratings = Hash.new
       @all_ratings.each do |m|
@@ -25,7 +30,7 @@ class MoviesController < ApplicationController
     @ratings_to_show = @ratings
 
     if @ratings != nil && @sort != nil
-      @movies = Movie.with_ratings(@ratings.keys).order(@sort)
+      @movies = Movie.with_ratings(session[:ratings].keys).order(session[:sort])
     elsif   @ratings != nil
       @movies = Movie.with_ratings(@ratings.keys)
     else
