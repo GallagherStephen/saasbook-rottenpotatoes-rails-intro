@@ -7,7 +7,41 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    
+    
+    @sort = params[:sort]
+    
+    @all_ratings = Movie.all_ratings
+    
+    @ratings = params[:ratings]
+     
+    if @ratings == nil
+      @ratings = Hash.new
+      @all_ratings.each do |m|
+        @ratings[m] = 0
+      end
+    end
+    
+    @ratings_to_show = @ratings
+
+    if @ratings != nil
+      @movies = Movie.with_ratings(@ratings.keys)
+    else
+     @movies = Movie.all
+    end
+    
+    
+    
+    
+   #params[:ratings]
+   #params[:title]
+   #params[:release_date]
+    
+    
+  end
+  
+  def sort_column
+    @movies = Movie.all_ratings
   end
 
   def new
