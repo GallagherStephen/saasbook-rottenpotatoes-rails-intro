@@ -24,7 +24,9 @@ class MoviesController < ApplicationController
     
     @ratings_to_show = @ratings
 
-    if @ratings != nil
+    if @ratings != nil && @sort != nil
+      @movies = Movie.with_ratings(@ratings.keys).order(@sort)
+    elsif   @ratings != nil
       @movies = Movie.with_ratings(@ratings.keys)
     else
      @movies = Movie.all
